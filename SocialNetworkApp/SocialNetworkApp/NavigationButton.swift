@@ -1,8 +1,15 @@
-//
-//  NavigationButton.swift
-//  SocialNetworkApp
-//
-//  Created by Berkay Unutkan on 25/10/2024.
-//
+import SwiftUI
 
-import Foundation
+struct NavigationButton: View {
+    var label: String
+    var icon: String
+
+    var body: some View {
+        VStack {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+            Text(label)
+                .font(.caption)
+        }
+    }
+}
