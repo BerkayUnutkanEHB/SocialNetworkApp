@@ -30,7 +30,6 @@ struct MainView: View {
                             }
                             Spacer()
                             Button(action: {
-                                // Actie om naar de volledige info te gaan
                             }) {
                                 Text("Details")
                                     .font(.caption)
