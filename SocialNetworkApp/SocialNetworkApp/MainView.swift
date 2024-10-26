@@ -1,5 +1,5 @@
 import SwiftUI
-
+//test push
 struct MainView: View {
     @Binding var isLoggedIn: Bool
     @ObservedObject var eventViewModel: EventViewModel 
