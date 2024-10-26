@@ -1,7 +1,7 @@
 import SwiftUI
 import FirebaseCore
 
-// AppDelegate om Firebase te initialiseren
+// SocialNetworkApp
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {

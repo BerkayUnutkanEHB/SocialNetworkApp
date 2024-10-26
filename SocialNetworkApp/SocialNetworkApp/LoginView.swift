@@ -1,6 +1,6 @@
 import SwiftUI
 import FirebaseAuth
-
+//Test
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
     @State private var email: String = ""

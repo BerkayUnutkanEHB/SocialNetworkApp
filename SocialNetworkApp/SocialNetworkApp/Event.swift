@@ -1,6 +1,6 @@
 import Foundation
 import FirebaseFirestore
-
+//event
 struct Event: Identifiable, Codable {
     @DocumentID var id: String?
     var name: String

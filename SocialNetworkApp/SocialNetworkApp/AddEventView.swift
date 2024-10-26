@@ -2,7 +2,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
-
+//event
 struct AddEventView: View {
     @State private var eventName: String = ""
     @State private var eventDescription: String = ""

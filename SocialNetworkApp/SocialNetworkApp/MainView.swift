@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MainView: View {
     @Binding var isLoggedIn: Bool
-    @ObservedObject var eventViewModel: EventViewModel // Gebruik @ObservedObject in plaats van @StateObject
+    @ObservedObject var eventViewModel: EventViewModel 
     @State private var isPresentingAddEventForm = false
 
     var body: some View {

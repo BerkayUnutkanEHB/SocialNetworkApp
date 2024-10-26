@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isLoggedIn: Bool = false // Houdt bij of de gebruiker is ingelogd
+    @State private var isLoggedIn: Bool = false 
     @StateObject private var eventViewModel = EventViewModel() // EventViewModel om events te beheren
 
     var body: some View {

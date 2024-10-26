@@ -2,7 +2,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
-
+//haaa
 struct EventListView: View {
     @State private var events: [Event] = []
     private let db = Firestore.firestore()

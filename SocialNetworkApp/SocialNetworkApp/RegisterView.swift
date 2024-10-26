@@ -1,6 +1,6 @@
 import SwiftUI
 import FirebaseAuth
-
+//registreren
 struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
