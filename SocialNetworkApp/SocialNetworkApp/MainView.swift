@@ -1,8 +1,8 @@
 import SwiftUI
-//test push
+
 struct MainView: View {
     @Binding var isLoggedIn: Bool
-    @ObservedObject var eventViewModel: EventViewModel 
+    @ObservedObject var eventViewModel: EventViewModel
     @State private var isPresentingAddEventForm = false
 
     var body: some View {
@@ -20,17 +20,16 @@ struct MainView: View {
                     .padding(.bottom, 10)
                 
                 List(eventViewModel.events) { event in
-                    VStack(alignment: .leading) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(event.name)
-                                    .font(.headline)
-                                Text("Locatie: \(event.location)")
-                                    .font(.subheadline)
-                            }
-                            Spacer()
-                            Button(action: {
-                            }) {
+                    NavigationLink(destination: EventDetailView(event: event)) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(event.name)
+                                        .font(.headline)
+                                    Text("Locatie: \(event.location)")
+                                        .font(.subheadline)
+                                }
+                                Spacer()
                                 Text("Details")
                                     .font(.caption)
                                     .foregroundColor(.blue)
@@ -38,16 +37,16 @@ struct MainView: View {
                                     .background(Color.gray.opacity(0.2))
                                     .cornerRadius(5)
                             }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                            
+                            Text("Datum: \(event.date, style: .date)")
+                                .font(.caption)
                         }
                         .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                        
-                        Text("Datum: \(event.date, style: .date)")
-                            .font(.caption)
                     }
-                    .padding()
                 }
                 
                 Button("Voeg een nieuwe event toe") {

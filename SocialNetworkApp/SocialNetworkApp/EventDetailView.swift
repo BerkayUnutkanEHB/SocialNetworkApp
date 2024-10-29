@@ -12,6 +12,7 @@ struct EventDetailView: View {
             Text("Locatie: \(event.location)")
             Text("Aangemaakt door: \(event.createdBy)")
             Text("Datum: \(event.date, style: .date)")
+            Text("Tijd: \(event.time)") // Voeg de tijd ook toe aan de details
         }
         .padding()
         .navigationTitle("Event Details")
