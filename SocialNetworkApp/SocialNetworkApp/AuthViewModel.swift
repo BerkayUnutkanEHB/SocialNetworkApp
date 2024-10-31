@@ -1,7 +1,7 @@
 import FirebaseAuth
 
 class AuthViewModel: ObservableObject {
-    // Registreren 
+    // Registreren
     func registerUser(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {

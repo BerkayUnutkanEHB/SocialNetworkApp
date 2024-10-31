@@ -1,6 +1,6 @@
 import SwiftUI
 import FirebaseAuth
-//registreren
+
 struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
@@ -14,15 +14,15 @@ struct RegisterView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 200, height: 200)
                 .padding(.top, 20)
-            
+
             TextField("Email", text: $email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            
+
             SecureField("Wachtwoord", text: $password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            
+
             Button(action: {
                 register()
             }) {

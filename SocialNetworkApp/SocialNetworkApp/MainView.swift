@@ -18,7 +18,23 @@ struct MainView: View {
                 Text("Events")
                     .font(.title2)
                     .padding(.bottom, 10)
-                
+                // Voeg hier de nieuwe knop toe met het plusicoon
+                Button(action: {
+                    isPresentingAddEventForm = true
+                }) {
+                    VStack {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                    }
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                Text("Voeg event toe")
+                    .font(.caption)
                 List(eventViewModel.events) { event in
                     NavigationLink(destination: EventDetailView(event: event)) {
                         VStack(alignment: .leading) {
@@ -30,12 +46,7 @@ struct MainView: View {
                                         .font(.subheadline)
                                 }
                                 Spacer()
-                                Text("Details")
-                                    .font(.caption)
-                                    .foregroundColor(.blue)
-                                    .padding(5)
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(5)
+                                
                             }
                             .padding()
                             .background(Color.white)
@@ -49,13 +60,6 @@ struct MainView: View {
                     }
                 }
                 
-                Button("Voeg een nieuwe event toe") {
-                    isPresentingAddEventForm = true
-                }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
             }
             .onAppear {
                 eventViewModel.fetchEvents()

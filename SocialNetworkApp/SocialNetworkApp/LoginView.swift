@@ -1,19 +1,20 @@
 import SwiftUI
 import FirebaseAuth
-//Test
+
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var alertMessage: String = ""
     @State private var isShowingAlert: Bool = false
+    @State private var username: String = "" // Dit is nu de e-mail
 
     var body: some View {
         VStack {
             Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 200, height: 200) 
+                .frame(width: 200, height: 200)
                 .padding(.top, 20)
 
             TextField("E-mail", text: $email)
@@ -41,7 +42,9 @@ struct LoginView: View {
                 alertMessage = error.localizedDescription
                 isShowingAlert = true
             } else {
-                alertMessage = "Inloggen succesvol!"
+                // Gebruik de e-mail als gebruikersnaam
+                username = email
+                alertMessage = "Inloggen succesvol! Welkom, \(username)!"
                 isShowingAlert = true
                 isLoggedIn = true
             }
