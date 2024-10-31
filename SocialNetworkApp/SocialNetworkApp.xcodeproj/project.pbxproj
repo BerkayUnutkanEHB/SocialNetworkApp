@@ -10,6 +10,8 @@
 		134C968B2CCC40C7007E2AE1 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134C968A2CCC40C7007E2AE1 /* EventDetailView.swift */; };
 		137046FD2CD2C7DD0095850D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 137046FC2CD2C7DD0095850D /* FirebaseMessaging */; };
 		137047032CD3AAA20095850D /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137047022CD3AAA20095850D /* ChatView.swift */; };
+		137047052CD3EECC0095850D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137047042CD3EECC0095850D /* ProfileView.swift */; };
+		137047072CD3F05A0095850D /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137047062CD3F05A0095850D /* ImagePicker.swift */; };
 		1373246F2CCCE68E002769F0 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 1373246E2CCCE68E002769F0 /* FirebaseStorage */; };
 		137324712CCCE68E002769F0 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 137324702CCCE68E002769F0 /* FirebaseStorageCombine-Community */; };
 		139AB58D2CC91AB600E0D85D /* SocialNetworkAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139AB58C2CC91AB600E0D85D /* SocialNetworkAppApp.swift */; };
@@ -61,6 +63,8 @@
 /* Begin PBXFileReference section */
 		134C968A2CCC40C7007E2AE1 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		137047022CD3AAA20095850D /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		137047042CD3EECC0095850D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		137047062CD3F05A0095850D /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		139AB5892CC91AB600E0D85D /* SocialNetworkApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocialNetworkApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		139AB58C2CC91AB600E0D85D /* SocialNetworkAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialNetworkAppApp.swift; sourceTree = "<group>"; };
 		139AB58E2CC91AB600E0D85D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -156,6 +160,8 @@
 				13EC5F622CCB9023009DF4C8 /* EventViewModel.swift */,
 				139AB5F52CC9254000E0D85D /* LoginView.swift */,
 				139AB5FF2CC930CF00E0D85D /* MainView.swift */,
+				137047042CD3EECC0095850D /* ProfileView.swift */,
+				137047062CD3F05A0095850D /* ImagePicker.swift */,
 				139AB58C2CC91AB600E0D85D /* SocialNetworkAppApp.swift */,
 				139AB5FD2CC92A4600E0D85D /* RegisterView.swift */,
 				13EC5F602CCB8E0D009DF4C8 /* NavigationButton.swift */,
@@ -369,11 +375,13 @@
 				137047032CD3AAA20095850D /* ChatView.swift in Sources */,
 				13EC5F632CCB9023009DF4C8 /* EventViewModel.swift in Sources */,
 				139AB5FE2CC92A4600E0D85D /* RegisterView.swift in Sources */,
+				137047052CD3EECC0095850D /* ProfileView.swift in Sources */,
 				13EC5F692CCB91C3009DF4C8 /* AddEventFormView.swift in Sources */,
 				13EC5F5F2CCB8D61009DF4C8 /* AddEventView.swift in Sources */,
 				13EC5F6B2CCC30C4009DF4C8 /* EventListView.swift in Sources */,
 				139AB5F62CC9254100E0D85D /* LoginView.swift in Sources */,
 				139AB58F2CC91AB600E0D85D /* ContentView.swift in Sources */,
+				137047072CD3F05A0095850D /* ImagePicker.swift in Sources */,
 				13EC5F5D2CCB8D41009DF4C8 /* Event.swift in Sources */,
 				139AB58D2CC91AB600E0D85D /* SocialNetworkAppApp.swift in Sources */,
 			);

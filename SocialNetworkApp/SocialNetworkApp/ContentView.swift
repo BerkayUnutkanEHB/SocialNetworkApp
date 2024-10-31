@@ -18,6 +18,12 @@ struct ContentView: View {
                     .tabItem {
                         Label("Chat", systemImage: "message") // Chat-icoon
                     }
+
+                // Profiel-tab toevoegen
+                ProfileView(isLoggedIn: $isLoggedIn) // Hier geven we de binding door
+                    .tabItem {
+                        Label("Profiel", systemImage: "person.crop.circle") // Profiel-icoon
+                    }
             } else {
                 // Login-tab
                 LoginView(isLoggedIn: $isLoggedIn)
