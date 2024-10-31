@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1347E70B2CD3FF7C0016AD6C /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 1347E70A2CD3FF7C0016AD6C /* FirebaseInAppMessaging-Beta */; };
+		1347E70F2CD40BB30016AD6C /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1347E70E2CD40BB20016AD6C /* LocationManager.swift */; };
 		134C968B2CCC40C7007E2AE1 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134C968A2CCC40C7007E2AE1 /* EventDetailView.swift */; };
 		137046FD2CD2C7DD0095850D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 137046FC2CD2C7DD0095850D /* FirebaseMessaging */; };
 		137047032CD3AAA20095850D /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137047022CD3AAA20095850D /* ChatView.swift */; };
@@ -61,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1347E70E2CD40BB20016AD6C /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		134C968A2CCC40C7007E2AE1 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		137047022CD3AAA20095850D /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		137047042CD3EECC0095850D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -93,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1347E70B2CD3FF7C0016AD6C /* FirebaseInAppMessaging-Beta in Frameworks */,
 				137046FD2CD2C7DD0095850D /* FirebaseMessaging in Frameworks */,
 				137324712CCCE68E002769F0 /* FirebaseStorageCombine-Community in Frameworks */,
 				139AB5C02CC9235A00E0D85D /* FirebaseAppCheck in Frameworks */,
@@ -161,6 +165,7 @@
 				139AB5F52CC9254000E0D85D /* LoginView.swift */,
 				139AB5FF2CC930CF00E0D85D /* MainView.swift */,
 				137047042CD3EECC0095850D /* ProfileView.swift */,
+				1347E70E2CD40BB20016AD6C /* LocationManager.swift */,
 				137047062CD3F05A0095850D /* ImagePicker.swift */,
 				139AB58C2CC91AB600E0D85D /* SocialNetworkAppApp.swift */,
 				139AB5FD2CC92A4600E0D85D /* RegisterView.swift */,
@@ -249,6 +254,7 @@
 				1373246E2CCCE68E002769F0 /* FirebaseStorage */,
 				137324702CCCE68E002769F0 /* FirebaseStorageCombine-Community */,
 				137046FC2CD2C7DD0095850D /* FirebaseMessaging */,
+				1347E70A2CD3FF7C0016AD6C /* FirebaseInAppMessaging-Beta */,
 			);
 			productName = SocialNetworkApp;
 			productReference = 139AB5892CC91AB600E0D85D /* SocialNetworkApp.app */;
@@ -369,6 +375,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				139AB5FC2CC929CA00E0D85D /* AuthViewModel.swift in Sources */,
+				1347E70F2CD40BB30016AD6C /* LocationManager.swift in Sources */,
 				134C968B2CCC40C7007E2AE1 /* EventDetailView.swift in Sources */,
 				139AB6002CC930CF00E0D85D /* MainView.swift in Sources */,
 				13EC5F612CCB8E0D009DF4C8 /* NavigationButton.swift in Sources */,
@@ -822,6 +829,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1347E70A2CD3FF7C0016AD6C /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 139AB5B82CC921E700E0D85D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
 		137046FC2CD2C7DD0095850D /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 139AB5B82CC921E700E0D85D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

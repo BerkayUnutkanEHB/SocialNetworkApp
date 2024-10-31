@@ -6,6 +6,8 @@
 	<string>AIzaSyCroYBq5XOWnmjX1MuqntlBvah2XkRy8jY</string>
 	<key>GCM_SENDER_ID</key>
 	<string>1029530574763</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We hebben je locatie nodig om evenementen in de buurt te tonen.</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
@@ -15,15 +17,15 @@
 	<key>STORAGE_BUCKET</key>
 	<string>social-network-app-916e2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:1029530574763:ios:ae4fb940c34af0cc367cee</string>
 </dict>
