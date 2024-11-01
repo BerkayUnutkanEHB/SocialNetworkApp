@@ -1,3 +1,4 @@
+// LoginView.swift
 import SwiftUI
 import FirebaseAuth
 
@@ -7,32 +8,58 @@ struct LoginView: View {
     @State private var password: String = ""
     @State private var alertMessage: String = ""
     @State private var isShowingAlert: Bool = false
-    @State private var username: String = "" // Dit is nu de e-mail
+    @State private var username: String = ""
 
     var body: some View {
-        VStack {
-            Image("logo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 200, height: 200)
-                .padding(.top, 20)
+        ZStack {
+            Color(.systemGray6).ignoresSafeArea() // Achtergrondkleur voor een moderne uitstraling
+            
+            VStack(spacing: 20) {
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 150, height: 150)
+                    .padding(.top, 40)
 
-            TextField("E-mail", text: $email)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            SecureField("Wachtwoord", text: $password)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            Button("Inloggen") {
-                login()
+                Text("Welcome Back!")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+
+                VStack(spacing: 16) {
+                    TextField("E-mail", text: $email)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
+
+                    SecureField("Wachtwoord", text: $password)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
+                }
+                .padding(.horizontal, 30)
+
+                Button(action: login) {
+                    Text("Inloggen")
+                        .foregroundColor(.white)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(12)
+                        .shadow(color: Color.blue.opacity(0.4), radius: 8, x: 0, y: 4)
+                }
+                .padding(.horizontal, 30)
+                .alert(isPresented: $isShowingAlert) {
+                    Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                }
+                
+                Spacer()
             }
             .padding()
-            .alert(isPresented: $isShowingAlert) {
-                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-            }
         }
-        .padding()
-        .background(Color.white) // Achtergrondkleur weer wit
     }
 
     private func login() {
@@ -42,7 +69,6 @@ struct LoginView: View {
                 alertMessage = error.localizedDescription
                 isShowingAlert = true
             } else {
-                // Gebruik de e-mail als gebruikersnaam
                 username = email
                 alertMessage = "Inloggen succesvol! Welkom, \(username)!"
                 isShowingAlert = true

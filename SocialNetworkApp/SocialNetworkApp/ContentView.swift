@@ -1,9 +1,9 @@
 import SwiftUI
-import CoreLocation // Voeg CoreLocation toe
+import CoreLocation
 
 struct ContentView: View {
     @State private var isLoggedIn: Bool = false
-    @StateObject private var eventViewModel = EventViewModel() // EventViewModel om events te beheren
+    @StateObject private var eventViewModel = EventViewModel()
     @State private var userLocation: CLLocationCoordinate2D?
 
     var body: some View {
@@ -12,52 +12,52 @@ struct ContentView: View {
                 // Hoofdmenu-tab
                 MainView(isLoggedIn: $isLoggedIn, eventViewModel: eventViewModel)
                     .tabItem {
-                        Label("Hoofdmenu", systemImage: "house")
+                        Label("Hoofdmenu", systemImage: "house.fill")
                     }
 
-                // Chat-tab toevoegen
-                ChatView() // Voeg de ChatView hier toe
+                // Chat-tab
+                ChatView()
                     .tabItem {
-                        Label("Chat", systemImage: "message") // Chat-icoon
+                        Label("Chat", systemImage: "message.fill")
                     }
 
-                // Profiel-tab toevoegen
-                ProfileView(isLoggedIn: $isLoggedIn) // Hier geven we de binding door
+                // Profiel-tab
+                ProfileView(isLoggedIn: $isLoggedIn)
                     .tabItem {
-                        Label("Profiel", systemImage: "person.crop.circle") // Profiel-icoon
+                        Label("Profiel", systemImage: "person.crop.circle.fill")
                     }
-                
-                // Locatie-tab toevoegen
+
+                // Locatie-tab
                 LocationView(userLocation: userLocation)
                     .tabItem {
-                        Label("Locatie", systemImage: "location")
+                        Label("Locatie", systemImage: "location.fill")
                     }
             } else {
                 // Login-tab
                 LoginView(isLoggedIn: $isLoggedIn)
                     .tabItem {
-                        Label("Inloggen", systemImage: "person")
+                        Label("Inloggen", systemImage: "person.fill")
                     }
 
                 // Registreren-tab
                 RegisterView()
                     .tabItem {
-                        Label("Registreren", systemImage: "person.fill")
+                        Label("Registreren", systemImage: "person.badge.plus")
                     }
             }
         }
         .onAppear {
-            // Start met het ophalen van de locatie
+            // Start locatie-updates
             LocationManager.shared.startUpdatingLocation()
-            // Haal de huidige locatie op
             if let location = LocationManager.shared.currentLocation {
                 userLocation = location.coordinate
             }
         }
         .onDisappear {
-            // Stop met het ophalen van de locatie
+            // Stop locatie-updates
             LocationManager.shared.stopUpdatingLocation()
         }
+        .accentColor(.blue) // Accentkleur aanpassen
     }
 }
 
@@ -66,14 +66,29 @@ struct LocationView: View {
     var userLocation: CLLocationCoordinate2D?
 
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("Huidige Locatie:")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.blue)
+            
             if let location = userLocation {
-                Text("Latitude: \(location.latitude), Longitude: \(location.longitude)")
+                Text("Latitude: \(String(format: "%.4f", location.latitude))")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                Text("Longitude: \(String(format: "%.4f", location.longitude))")
+                    .font(.body)
+                    .foregroundColor(.secondary)
             } else {
                 Text("Locatie niet beschikbaar")
+                    .font(.body)
+                    .foregroundColor(.red)
             }
         }
+        .padding()
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
         .padding()
     }
 }

@@ -7,60 +7,63 @@ struct MainView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 15) {
+                // Logo met aangepaste styling
                 Image("logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 100)
+                    .frame(height: 80)
                     .padding(.top, 20)
-                    .padding(.bottom, 10)
                 
                 Text("Events")
-                    .font(.title2)
-                    .padding(.bottom, 10)
-                // Voeg hier de nieuwe knop toe met het plusicoon
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.blue)
+                
+                // Toevoegen event-knop
                 Button(action: {
                     isPresentingAddEventForm = true
                 }) {
-                    VStack {
+                    HStack {
                         Image(systemName: "plus")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
+                            .font(.system(size: 18, weight: .bold))
+                        Text("Voeg event toe")
+                            .font(.headline)
                     }
                     .padding()
+                    .frame(maxWidth: .infinity)
                     .background(Color.blue)
                     .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .cornerRadius(12)
+                    .shadow(color: Color.blue.opacity(0.3), radius: 5, x: 0, y: 3)
                 }
-                Text("Voeg event toe")
-                    .font(.caption)
+                .padding(.horizontal)
+                
+                // Eventlijst met styling aanpassingen
                 List(eventViewModel.events) { event in
                     NavigationLink(destination: EventDetailView(event: event)) {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(event.name)
-                                        .font(.headline)
-                                    Text("Locatie: \(event.location)")
-                                        .font(.subheadline)
-                                }
-                                Spacer()
-                                
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                            
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(event.name)
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            Text("Locatie: \(event.location)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             Text("Datum: \(event.date, style: .date)")
                                 .font(.caption)
+                                .foregroundColor(.gray)
                         }
                         .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
                     }
+                    .listRowBackground(Color.clear) // Zorgt voor transparante achtergrond in lijst
                 }
-                
+                .listStyle(PlainListStyle())
             }
+            .padding(.horizontal)
+            .background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all)) // Lichtgrijze achtergrond
             .onAppear {
                 eventViewModel.fetchEvents()
             }
@@ -72,9 +75,17 @@ struct MainView: View {
                     Button(action: {
                         isLoggedIn = false
                     }) {
-                        Text("Uitloggen")
-                            .foregroundColor(.red)
+                        HStack {
+                            Image(systemName: "arrowshape.turn.up.left.fill")
+                            Text("Uitloggen")
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        .background(Color.red)
+                        .cornerRadius(8)
                     }
+
                 }
             }
         }

@@ -7,64 +7,126 @@ import FirebaseAuth
 struct ProfileView: View {
     @Binding var isLoggedIn: Bool
     @State private var profileImage: UIImage? = nil
-    @State private var selectedImage: UIImage? = nil
-    @State private var imagePickerPresented = false
     @State private var userEvents: [Event] = []
+    @State private var loading = true
     
     private let db = Firestore.firestore()
     private let storage = Storage.storage()
-
+    
+    // Vooraf gedefinieerde profielfoto's
+    private let defaultProfileImages: [String] = [
+        "profile1", // Zorg ervoor dat deze afbeeldingen in je asset catalog staan
+        "profile2",
+        "profile3"
+    ]
+    
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             // Profielfoto-sectie
-            if let profileImage = profileImage {
-                Image(uiImage: profileImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.gray)
-            }
-
-            Button("Wijzig Profielfoto") {
-                imagePickerPresented.toggle()
+            VStack {
+                if let profileImage = profileImage {
+                    Image(uiImage: profileImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+                } else {
+                    Image(systemName: "person.crop.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .foregroundColor(.gray)
+                        .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+                }
             }
             .padding()
+            
+            // Vooraf gedefinieerde profielfoto's weergeven
+            Text("Kies een Profielfoto")
+                .font(.headline)
+                .padding(.top)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 20) {
+                    ForEach(defaultProfileImages, id: \.self) { imageName in
+                        Button(action: {
+                            selectProfileImage(named: imageName)
+                        }) {
+                            Image(imageName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 80, height: 80)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+                        }
+                    }
+                }
+                .padding()
+            }
 
             // Gebruikersevents tonen
             Text("Mijn Events")
                 .font(.headline)
-            List(userEvents) { event in
-                Text(event.name)
-            }
+                .padding(.top)
 
-            // Uitlog-knop
-            Button("Uitloggen") {
-                logOut()
+            if loading {
+                ProgressView("Laden...")
+                    .padding()
+            } else {
+                // Eventlijst met styling aanpassingen
+                List(userEvents) { event in
+                    NavigationLink(destination: EventDetailView(event: event)) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(event.name)
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            Text("Locatie: \(event.location)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Text("Datum: \(event.date, style: .date)")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
+                    }
+                    .listRowBackground(Color.clear) // Zorgt voor transparante achtergrond in lijst
+                }
+                .listStyle(PlainListStyle())
+                .padding(.horizontal)
+                .background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all)) // Lichtgrijze achtergrond
             }
-            .foregroundColor(.red)
+            
+            // Uitlog-knop
+            Button(action: logOut) {
+                Text("Uitloggen")
+                    .foregroundColor(.red)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.red, lineWidth: 1))
+            }
             .padding()
         }
         .onAppear {
             fetchProfileImage()
             fetchUserEvents()
         }
-        .sheet(isPresented: $imagePickerPresented) {
-            ImagePicker(selectedImage: $selectedImage)
-                .onDisappear {
-                    if let selectedImage = selectedImage {
-                        uploadProfileImage(selectedImage)
-                    }
-                }
-        }
+        .navigationTitle("Profiel")
     }
     
     // MARK: - Methoden
+
+    // Selecteer een profielfoto
+    private func selectProfileImage(named imageName: String) {
+        if let image = UIImage(named: imageName) {
+            profileImage = image
+            uploadProfileImage(image)
+        }
+    }
 
     // Laad profielfoto uit Firebase Storage
     private func fetchProfileImage() {
@@ -105,6 +167,7 @@ struct ProfileView: View {
                 self.userEvents = documents.compactMap { document in
                     try? document.data(as: Event.self)
                 }
+                self.loading = false
             } else {
                 print("Error fetching user events: \(error?.localizedDescription ?? "Unknown error")")
             }

@@ -12,59 +12,81 @@ struct ChatView: View {
 
     var body: some View {
         VStack {
-            // Titel van de chat
-            Text("Chat")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.top, 20)
-                .foregroundColor(.green)
+            // Logo en Titel
+            VStack {
+                Image("logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 80)
+                    .padding(.top, 20)
+                
+                Text("Chat")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.blue)
+            }
+            .padding(.bottom, 20)
 
             // Kiezen van de ontvanger
             Picker("Kies een ontvanger", selection: $selectedRecipient) {
                 ForEach(users, id: \.self) { user in
-                    Text(user).tag(user)
+                    Text(user)
+                        .tag(user)
+                        .foregroundColor(user == selectedRecipient ? .blue : .black) // Geef de geselecteerde ontvanger een duidelijke kleur
+                        .fontWeight(user == selectedRecipient ? .bold : .regular) // Maak de geselecteerde ontvanger vetgedrukt
                 }
             }
             .pickerStyle(MenuPickerStyle())
-            .padding()
+            .padding(.horizontal)
+            .background(Color.blue.opacity(0.1))
+            .cornerRadius(10)
+            .padding(.horizontal)
 
+            // Berichtlijst
             List(messages) { message in
-                // Berichten met verschillende stijlen
-                HStack {
-                    Text(message.senderEmail)
-                        .fontWeight(.bold)
-                        .foregroundColor(.blue)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(message.senderEmail)
+                            .font(.footnote)
+                            .fontWeight(.bold)
+                            .foregroundColor(.blue)
+
+                        Text(message.text)
+                            .padding(10)
+                            .background(message.senderId == Auth.auth().currentUser?.uid ? Color.blue.opacity(0.1) : Color.gray.opacity(0.2))
+                            .cornerRadius(10)
+                            .foregroundColor(.primary)
+                    }
                     Spacer()
-                    Text(message.text)
-                        .padding(10)
-                        .background(message.senderId == Auth.auth().currentUser?.uid ? Color.green.opacity(0.3) : Color.gray.opacity(0.2))
-                        .cornerRadius(10)
-                        .foregroundColor(.black)
                 }
-                .padding(.horizontal)
+                .padding(.vertical, 5)
             }
             .onAppear(perform: {
                 observeMessages()
-                loadUsers() // Laad gebruikers bij het opstarten
+                loadUsers()
             })
             .listStyle(PlainListStyle())
+            .background(Color.white)
 
+            // Berichtinvoer en verzendknop
             HStack {
                 TextField("Typ je bericht...", text: $messageText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-
+                    .padding(.leading)
+                
                 Button(action: {
                     sendMessage()
                 }) {
-                    Text("Verzend")
+                    Image(systemName: "paperplane.fill")
                         .padding()
-                        .background(Color.green)
+                        .background(Color.blue)
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .clipShape(Circle())
                 }
+                .padding(.trailing)
             }
             .padding()
+            .background(Color.blue.opacity(0.05))
         }
         .background(Color.white)
         .navigationTitle("")
@@ -94,19 +116,16 @@ struct ChatView: View {
 
     // Laad geregistreerde gebruikers
     private func loadUsers() {
-        // Hier neem je aan dat je een collectie "users" hebt in Firestore
         db.collection("users").getDocuments { snapshot, error in
             if let error = error {
                 print("Error fetching users: \(error.localizedDescription)")
                 return
             }
 
-            // Haal gebruikers op en sluit de ingelogde gebruiker uit
             if let documents = snapshot?.documents {
                 let currentUserEmail = Auth.auth().currentUser?.email ?? ""
                 self.users = documents.compactMap { document in
                     let email = document.get("email") as? String
-                    // Voeg alleen de gebruikers toe die niet de huidige gebruiker zijn
                     return email != currentUserEmail ? email : nil
                 }
             }
@@ -124,7 +143,7 @@ struct ChatView: View {
             "senderEmail": userEmail,
             "text": messageText,
             "timestamp": Timestamp(),
-            "recipientEmail": selectedRecipient // Voeg de ontvanger toe aan de database
+            "recipientEmail": selectedRecipient
         ]
 
         db.collection("messages").document(UUID().uuidString).setData(messageData) { error in
