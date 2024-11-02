@@ -2,16 +2,30 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
-//event
+
 struct AddEventView: View {
     @State private var eventName: String = ""
     @State private var eventDescription: String = ""
     @State private var eventDate: Date = Date()
     @State private var eventTime: String = ""
-    @State private var eventLocation: String = ""
+    @State private var selectedLocation: String = "" // Aangepast
     @State private var showAlert: Bool = false
 
     private let db = Firestore.firestore()
+
+    // Voeg hier de locaties toe
+    private let locations = [
+        "Antwerpen",
+        "Brussel",
+        "Gent",
+        "Brugge",
+        "Leuven",
+        "Mechelen",
+        "Namur",
+        "Luik",
+        "Kortrijk",
+        "Oostende"
+    ]
 
     var body: some View {
         VStack {
@@ -26,9 +40,16 @@ struct AddEventView: View {
             TextField("Event Time", text: $eventTime)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            TextField("Event Location", text: $eventLocation)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+
+            // Locatie dropdown
+            Picker("Location", selection: $selectedLocation) {
+                ForEach(locations, id: \.self) { location in
+                    Text(location).tag(location)
+                }
+            }
+            .pickerStyle(MenuPickerStyle()) // Of gebruik een andere stijl als je dat wilt
+            .padding()
+            
             Button("Add Event") {
                 addEvent()
             }
@@ -53,7 +74,7 @@ struct AddEventView: View {
             "description": eventDescription,
             "date": Timestamp(date: eventDate),
             "time": eventTime,
-            "location": eventLocation,
+            "location": selectedLocation,  // Gebruik de geselecteerde locatie
             "createdBy": user.uid  // Gebruik de UID van de huidige gebruiker
         ] as [String : Any]
         
@@ -68,7 +89,7 @@ struct AddEventView: View {
                 eventDescription = ""
                 eventDate = Date()
                 eventTime = ""
-                eventLocation = ""
+                selectedLocation = ""  // Reset de geselecteerde locatie
             }
         }
     }

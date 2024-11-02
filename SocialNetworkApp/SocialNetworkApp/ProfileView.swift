@@ -7,22 +7,29 @@ import FirebaseAuth
 struct ProfileView: View {
     @Binding var isLoggedIn: Bool
     @State private var profileImage: UIImage? = nil
-    @State private var userEvents: [Event] = []
-    @State private var loading = true
+    @State private var selectedProfileImageName: String? = nil // Sla de naam van de gekozen profielfoto op
+    @State private var userName: String = ""
+    @State private var selectedLocation: String = ""
     
     private let db = Firestore.firestore()
     private let storage = Storage.storage()
     
-    // Vooraf gedefinieerde profielfoto's
     private let defaultProfileImages: [String] = [
-        "profile1", // Zorg ervoor dat deze afbeeldingen in je asset catalog staan
-        "profile2",
-        "profile3"
+        "profile1", "profile2", "profile3"
+    ]
+    
+    private let belgianCities = [
+        "Antwerpen", "Brugge", "Brussel", "Gent", "Leuven",
+        "Luik", "Mechelen", "Mons", "Namur", "Kortrijk"
     ]
     
     var body: some View {
         VStack(spacing: 20) {
-            // Profielfoto-sectie
+            Text("Welkom, \(userName)!")
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(.top)
+            
             VStack {
                 if let profileImage = profileImage {
                     Image(uiImage: profileImage)
@@ -42,7 +49,6 @@ struct ProfileView: View {
             }
             .padding()
             
-            // Vooraf gedefinieerde profielfoto's weergeven
             Text("Kies een Profielfoto")
                 .font(.headline)
                 .padding(.top)
@@ -64,43 +70,22 @@ struct ProfileView: View {
                 }
                 .padding()
             }
-
-            // Gebruikersevents tonen
-            Text("Mijn Events")
+            
+            Text("Mijn Locatie")
                 .font(.headline)
                 .padding(.top)
 
-            if loading {
-                ProgressView("Laden...")
-                    .padding()
-            } else {
-                // Eventlijst met styling aanpassingen
-                List(userEvents) { event in
-                    NavigationLink(destination: EventDetailView(event: event)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(event.name)
-                                .font(.headline)
-                                .foregroundColor(.primary)
-                            Text("Locatie: \(event.location)")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Text("Datum: \(event.date, style: .date)")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
-                    }
-                    .listRowBackground(Color.clear) // Zorgt voor transparante achtergrond in lijst
+            Picker("Selecteer uw locatie", selection: $selectedLocation) {
+                ForEach(belgianCities, id: \.self) { city in
+                    Text(city).tag(city)
                 }
-                .listStyle(PlainListStyle())
-                .padding(.horizontal)
-                .background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all)) // Lichtgrijze achtergrond
             }
+            .pickerStyle(MenuPickerStyle())
+            .onChange(of: selectedLocation, perform: { _ in
+                saveUserData() // Opslaan wanneer locatie verandert
+            })
+            .padding()
             
-            // Uitlog-knop
             Button(action: logOut) {
                 Text("Uitloggen")
                     .foregroundColor(.red)
@@ -112,37 +97,76 @@ struct ProfileView: View {
             .padding()
         }
         .onAppear {
-            fetchProfileImage()
-            fetchUserEvents()
+            fetchUserName()
+            loadUserData() // Laad opgeslagen data bij het openen van de view
         }
         .navigationTitle("Profiel")
     }
     
-    // MARK: - Methoden
-
-    // Selecteer een profielfoto
-    private func selectProfileImage(named imageName: String) {
-        if let image = UIImage(named: imageName) {
-            profileImage = image
-            uploadProfileImage(image)
+    private func fetchUserName() {
+        if let user = Auth.auth().currentUser {
+            userName = user.displayName ?? user.email ?? "Gebruiker"
         }
     }
-
-    // Laad profielfoto uit Firebase Storage
-    private func fetchProfileImage() {
+    private func saveUserLocation(_ location: String) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        let profileImageRef = storage.reference(withPath: "profile_images/\(userId).jpg")
-        profileImageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-            if let data = data, let image = UIImage(data: data) {
-                self.profileImage = image
+        db.collection("users").document(userId).setData(["location": location], merge: true) { error in
+            if let error = error {
+                print("Error saving user location: \(error.localizedDescription)")
             } else {
-                print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
+                print("User location successfully saved.")
             }
         }
     }
 
-    // Upload profielfoto naar Firebase Storage
+    private func selectProfileImage(named imageName: String) {
+        if let image = UIImage(named: imageName) {
+            profileImage = image
+            selectedProfileImageName = imageName // Sla de gekozen profielfotonaam op
+            uploadProfileImage(image)
+            saveUserData() // Sla de profielfotonaam op in Firestore
+        }
+    }
+
+    private func loadUserData() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection("users").document(userId).getDocument { snapshot, error in
+            if let data = snapshot?.data() {
+                // Laad locatie en profielfotonaam uit Firestore
+                if let location = data["location"] as? String {
+                    self.selectedLocation = location
+                }
+                if let profileImageName = data["profileImageName"] as? String {
+                    self.selectedProfileImageName = profileImageName
+                    self.profileImage = UIImage(named: profileImageName)
+                }
+            } else {
+                print("Error loading user data: \(error?.localizedDescription ?? "Unknown error")")
+            }
+        }
+    }
+
+    private func saveUserData() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        // Sla locatie en profielfotonaam op in Firestore
+        var userData: [String: Any] = ["location": selectedLocation]
+        
+        if let profileImageName = selectedProfileImageName {
+            userData["profileImageName"] = profileImageName
+        }
+        
+        db.collection("users").document(userId).setData(userData, merge: true) { error in
+            if let error = error {
+                print("Error saving user data: \(error.localizedDescription)")
+            } else {
+                print("User data successfully saved.")
+            }
+        }
+    }
+
     private func uploadProfileImage(_ image: UIImage) {
         guard let userId = Auth.auth().currentUser?.uid,
               let imageData = image.jpegData(compressionQuality: 0.5) else { return }
@@ -152,29 +176,11 @@ struct ProfileView: View {
             if let error = error {
                 print("Error uploading profile image: \(error.localizedDescription)")
             } else {
-                self.profileImage = image
                 print("Profile image successfully uploaded.")
             }
         }
     }
-
-    // Laad events die door de gebruiker zijn aangemaakt
-    private func fetchUserEvents() {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        db.collection("events").whereField("createdBy", isEqualTo: userId).getDocuments { snapshot, error in
-            if let documents = snapshot?.documents {
-                self.userEvents = documents.compactMap { document in
-                    try? document.data(as: Event.self)
-                }
-                self.loading = false
-            } else {
-                print("Error fetching user events: \(error?.localizedDescription ?? "Unknown error")")
-            }
-        }
-    }
-
-    // Uitlogfunctie
+    
     private func logOut() {
         do {
             try Auth.auth().signOut()
