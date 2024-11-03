@@ -1,10 +1,8 @@
 import SwiftUI
-import CoreLocation
 
 struct ContentView: View {
     @State private var isLoggedIn: Bool = false
-    @StateObject private var eventViewModel = EventViewModel()
-    @State private var userLocation: CLLocationCoordinate2D?
+    @StateObject private var eventViewModel = EventViewModel() // EventViewModel om events te beheren
 
     var body: some View {
         TabView {
@@ -12,84 +10,34 @@ struct ContentView: View {
                 // Hoofdmenu-tab
                 MainView(isLoggedIn: $isLoggedIn, eventViewModel: eventViewModel)
                     .tabItem {
-                        Label("Hoofdmenu", systemImage: "house.fill")
+                        Label("Hoofdmenu", systemImage: "house")
                     }
 
-                // Chat-tab
-                ChatView()
+                // Chat-tab toevoegen
+                ChatView() // Voeg de ChatView hier toe
                     .tabItem {
-                        Label("Chat", systemImage: "message.fill")
+                        Label("Chat", systemImage: "message") // Chat-icoon
                     }
 
-                // Profiel-tab
-                ProfileView(isLoggedIn: $isLoggedIn)
+                // Profiel-tab toevoegen
+                ProfileView(isLoggedIn: $isLoggedIn) // Hier geven we de binding door
                     .tabItem {
-                        Label("Profiel", systemImage: "person.crop.circle.fill")
-                    }
-
-                // Locatie-tab
-                LocationView(userLocation: userLocation)
-                    .tabItem {
-                        Label("Locatie", systemImage: "location.fill")
+                        Label("Profiel", systemImage: "person.crop.circle") // Profiel-icoon
                     }
             } else {
                 // Login-tab
                 LoginView(isLoggedIn: $isLoggedIn)
                     .tabItem {
-                        Label("Inloggen", systemImage: "person.fill")
+                        Label("Inloggen", systemImage: "person")
                     }
 
                 // Registreren-tab
                 RegisterView()
                     .tabItem {
-                        Label("Registreren", systemImage: "person.badge.plus")
+                        Label("Registreren", systemImage: "person.fill")
                     }
             }
         }
-        .onAppear {
-            // Start locatie-updates
-            LocationManager.shared.startUpdatingLocation()
-            if let location = LocationManager.shared.currentLocation {
-                userLocation = location.coordinate
-            }
-        }
-        .onDisappear {
-            // Stop locatie-updates
-            LocationManager.shared.stopUpdatingLocation()
-        }
-        .accentColor(.blue) // Accentkleur aanpassen
-    }
-}
-
-// MARK: - Locatieweergave
-struct LocationView: View {
-    var userLocation: CLLocationCoordinate2D?
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Huidige Locatie:")
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundColor(.blue)
-            
-            if let location = userLocation {
-                Text("Latitude: \(String(format: "%.4f", location.latitude))")
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                Text("Longitude: \(String(format: "%.4f", location.longitude))")
-                    .font(.body)
-                    .foregroundColor(.secondary)
-            } else {
-                Text("Locatie niet beschikbaar")
-                    .font(.body)
-                    .foregroundColor(.red)
-            }
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(15)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
-        .padding()
     }
 }
 

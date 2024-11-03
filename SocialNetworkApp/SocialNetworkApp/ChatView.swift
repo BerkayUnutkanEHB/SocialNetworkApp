@@ -2,6 +2,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
+import UserNotifications // Voeg deze import toe
 
 struct ChatView: View {
     @State private var messageText: String = ""
@@ -32,8 +33,8 @@ struct ChatView: View {
                 ForEach(users, id: \.self) { user in
                     Text(user)
                         .tag(user)
-                        .foregroundColor(user == selectedRecipient ? .blue : .black) // Geef de geselecteerde ontvanger een duidelijke kleur
-                        .fontWeight(user == selectedRecipient ? .bold : .regular) // Maak de geselecteerde ontvanger vetgedrukt
+                        .foregroundColor(user == selectedRecipient ? .blue : .black)
+                        .fontWeight(user == selectedRecipient ? .bold : .regular)
                 }
             }
             .pickerStyle(MenuPickerStyle())
@@ -62,6 +63,7 @@ struct ChatView: View {
                 .padding(.vertical, 5)
             }
             .onAppear(perform: {
+                requestNotificationPermission() // Vraag om machtiging
                 observeMessages()
                 loadUsers()
             })
@@ -93,6 +95,15 @@ struct ChatView: View {
         .navigationBarHidden(true)
     }
 
+    // Vraag om notificatie machtiging
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if let error = error {
+                print("Error requesting notification permission: \(error.localizedDescription)")
+            }
+        }
+    }
+
     // Berichten observeren
     private func observeMessages() {
         db.collection("messages").order(by: "timestamp").addSnapshotListener { querySnapshot, error in
@@ -109,7 +120,26 @@ struct ChatView: View {
                       let recipientEmail = data["recipientEmail"] as? String,
                       (recipientEmail == selectedRecipient || senderEmail == selectedRecipient) else { return nil }
 
+                // Stuur notificatie voor nieuw bericht
+                sendNotification(for: text)
+
                 return ChatMessage(id: document.documentID, senderId: senderId, senderEmail: senderEmail, text: text, timestamp: timestamp)
+            }
+        }
+    }
+
+    // Notificatie verzenden
+    private func sendNotification(for message: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "Nieuw Bericht"
+        content.body = message
+        content.sound = .default
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error adding notification: \(error.localizedDescription)")
             }
         }
     }

@@ -7,63 +7,71 @@ struct MainView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 15) {
-                // Logo met aangepaste styling
+            VStack {
                 Image("logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 80)
+                    .frame(height: 100)
                     .padding(.top, 20)
+                    .padding(.bottom, 10)
                 
                 Text("Events")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.blue)
-                
-                // Toevoegen event-knop
+
+                // Sorteermenu
+                Picker("Sorteer op", selection: $eventViewModel.sortOption) {
+                    ForEach(EventViewModel.SortOption.allCases, id: \.self) { option in
+                        Text(option.rawValue).tag(option)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .padding()
+
                 Button(action: {
                     isPresentingAddEventForm = true
                 }) {
-                    HStack {
+                    VStack {
                         Image(systemName: "plus")
-                            .font(.system(size: 18, weight: .bold))
-                        Text("Voeg event toe")
-                            .font(.headline)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
                     }
                     .padding()
-                    .frame(maxWidth: .infinity)
                     .background(Color.blue)
                     .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .shadow(color: Color.blue.opacity(0.3), radius: 5, x: 0, y: 3)
+                    .cornerRadius(10)
                 }
-                .padding(.horizontal)
-                
-                // Eventlijst met styling aanpassingen
+                Text("Voeg event toe")
+                    .font(.caption)
+
+                // Lijst van evenementen
                 List(eventViewModel.events) { event in
                     NavigationLink(destination: EventDetailView(event: event)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(event.name)
-                                .font(.headline)
-                                .foregroundColor(.primary)
-                            Text("Locatie: \(event.location)")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+                        VStack(alignment: .leading) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(event.name)
+                                        .font(.headline)
+                                    Text("Locatie: \(event.location)")
+                                        .font(.subheadline)
+                                }
+                                Spacer()
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                            
                             Text("Datum: \(event.date, style: .date)")
                                 .font(.caption)
-                                .foregroundColor(.gray)
                         }
                         .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 3)
                     }
-                    .listRowBackground(Color.clear) // Zorgt voor transparante achtergrond in lijst
                 }
-                .listStyle(PlainListStyle())
+                
             }
-            .padding(.horizontal)
-            .background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all)) // Lichtgrijze achtergrond
             .onAppear {
                 eventViewModel.fetchEvents()
             }
@@ -75,17 +83,9 @@ struct MainView: View {
                     Button(action: {
                         isLoggedIn = false
                     }) {
-                        HStack {
-                            Image(systemName: "arrowshape.turn.up.left.fill")
-                            Text("Uitloggen")
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal)
-                        .padding(.vertical, 8)
-                        .background(Color.red)
-                        .cornerRadius(8)
+                        Text("Uitloggen")
+                            .foregroundColor(.red)
                     }
-
                 }
             }
         }
